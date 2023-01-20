@@ -2,6 +2,7 @@ import { Text, View, ScrollView } from 'react-native';
 import { DAY_SIZE, HabitDay } from '../components/HabitDay';
 import { Header } from '../components/Header';
 import { generateDatesFromYearBeggining } from '../utils/generate-range-between-dates';
+import { useNavigation } from "@react-navigation/native";
 
 const WEEK_DAYS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
 const DATES_FROM_YEAR_START = generateDatesFromYearBeggining();
@@ -10,6 +11,9 @@ const AMOUNT_OF_DAYS_TO_FILL = MINIMUM_SUMMARY_DATE_SIZES - DATES_FROM_YEAR_STAR
 
 
 export function Home() {
+
+    const { navigate } = useNavigation();
+
     return (
         <View className="flex-1 bg-background px-8 pt-16">
             <Header />
@@ -27,13 +31,15 @@ export function Home() {
                 <View className="flex-row flex-wrap">
                     {
                         DATES_FROM_YEAR_START.map(date => {
-                            return <HabitDay key={date.toISOString()} />
+                            return <HabitDay key={date.toISOString()} onPress={() => {
+                                navigate('habit', { date: date.toISOString()})
+                            }} />
                         })
                     }
                     {
                         AMOUNT_OF_DAYS_TO_FILL > 0 && Array.from({ length: AMOUNT_OF_DAYS_TO_FILL })
                             .map((_, index) => {
-                                return <View className="bg-zinc-900 rounded-lg border-2 m-1 border-zinc-800 opacity-40"
+                                return <View key={index} className="bg-zinc-900 rounded-lg border-2 m-1 border-zinc-800 opacity-40"
                                     style={{ width: DAY_SIZE, height: DAY_SIZE }} />
                             })
                     }
